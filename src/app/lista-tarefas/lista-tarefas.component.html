@@ -4,7 +4,7 @@
             Criar nova tarefa
         </button>
     </div>
-    <form class="formulario ff-prompt" [formGroup]="formulario" *ngIf="formAberto">
+    <form class="formulario ff-prompt" [formGroup]="formulario" *ngIf="formAberto" @shownState>
         <label for="descricao">Descrição da tarefa</label>
         <input required type="text" formControlName="descricao" placeholder="Digite a tarefa"
             [ngClass]="campoValidado('descricao')">
@@ -46,7 +46,8 @@
             alt="Ilustração de um ambiente com mesa, computador, quadro e um vaso com planta">
     </div>
     <div *ngIf="listaTarefas.length > 0, else semTarefas">
-        <div class="lista-tarefas card-{{ tarefa.categoria }}" *ngFor="let tarefa of listaTarefas">
+        <div class="lista-tarefas card-{{ tarefa.categoria }}" *ngFor="let tarefa of listaTarefas; let i = index"
+            (mouseover)="indexTarefa =i" [@highlightedState]=" indexTarefa != i ? 'default' : 'highlighted' ">
             <div class="info-card">
                 <p class="categoria-tarefa categoria-{{ tarefa.categoria }}">
                     <img src="assets/icones/{{ tarefa.categoria }}.png" alt="Ícone de {{ tarefa.categoria }}">
@@ -57,7 +58,8 @@
                 </p>
                 <p class="status-tarefa">
                     <button [ngClass]="(tarefa.statusFinalizado == true) ? 'icone-checked' : 'icone-unchecked'"
-                        (click)="finalizarTarefa(tarefa.id);">
+                        (click)="finalizarTarefa(tarefa.id);"
+                        [@checkButton]="(tarefa.id === id ? 'checked' : 'unchecked')">
                     </button>
                 </p>
             </div>
