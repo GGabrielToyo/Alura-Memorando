@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TarefaService } from 'src/app/service/tarefa.service';
 import { Tarefa } from '../interface/tarefa';
-import { checkButtonTrigger, highlightedTrigger, shownStateTrigger } from '../animations';
+import { checkButtonTrigger, filterTrigger, flyInOutTrigger, formButtonTrigger, highlightedTrigger, shownStateTrigger } from '../animations';
 
 @Component({
   selector: 'app-lista-tarefas',
   templateUrl: './lista-tarefas.component.html',
   styleUrls: ['./lista-tarefas.component.css'],
-  animations: [highlightedTrigger, shownStateTrigger, checkButtonTrigger]
+  animations: [highlightedTrigger, shownStateTrigger, checkButtonTrigger, filterTrigger, formButtonTrigger, flyInOutTrigger]
 })
 export class ListaTarefasComponent implements OnInit {
   listaTarefas: Tarefa[] = [];
@@ -19,6 +19,8 @@ export class ListaTarefasComponent implements OnInit {
   validado: boolean = false;
   indexTarefa: number = -1;
   id: number = 0;
+  campoBusca: string = '';
+  listaTarefasFiltradas: Tarefa[] = [];
 
   formulario: FormGroup = this.fomBuilder.group({
     id: [0],
@@ -37,8 +39,9 @@ export class ListaTarefasComponent implements OnInit {
   ngOnInit(): Tarefa[] {
     this.service.listar(this.categoria).subscribe((listaTarefas) => {
       this.listaTarefas = listaTarefas;
+      this.listaTarefasFiltradas = listaTarefas;
     });
-    return this.listaTarefas;
+    return this.listaTarefasFiltradas;
   }
 
   mostrarOuEsconderFormulario() {
@@ -121,7 +124,7 @@ export class ListaTarefasComponent implements OnInit {
 
   listarAposCheck() {
     this.service.listar(this.categoria).subscribe((listaTarefas) => {
-      this.listaTarefas = listaTarefas;
+      this.listaTarefasFiltradas = listaTarefas;
     });
   }
 
@@ -142,5 +145,17 @@ export class ListaTarefasComponent implements OnInit {
       this.validado = true;
       return 'form-tarefa';
     }
+  }
+
+  filtrarTarefasPorDescricao(descricao: string): void {
+    this.campoBusca = descricao.trim().toLowerCase();
+
+    if (descricao) {
+      this.listaTarefasFiltradas = this.listaTarefas.filter(tarefa =>
+        tarefa.descricao.toLowerCase().includes(this.campoBusca));
+    } else {
+      this.listaTarefasFiltradas = this.listaTarefas;
+    }
+
   }
 }
