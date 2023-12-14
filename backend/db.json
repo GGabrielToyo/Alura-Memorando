@@ -29,11 +29,11 @@
       "prioridade": "Alta"
     },
     {
-      "id": 6,
-      "descricao": "Ler",
-      "statusFinalizado": false,
+      "id": 7,
+      "descricao": "teste subscription",
+      "statusFinalizado": true,
       "categoria": "Estudos",
-      "prioridade": "Alta"
+      "prioridade": "Baixa"
     }
   ]
 }

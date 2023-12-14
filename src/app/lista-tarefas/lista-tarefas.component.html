@@ -5,6 +5,7 @@
         </button>
     </div>
     <form [@formButton]="formulario.valid ? 'valid' : 'invalid' "
+          [@shakeAnimation]="formulario.value"
      class="formulario ff-prompt" [formGroup]="formulario" *ngIf="formAberto" @shownState>
         <label for="descricao">Descrição da tarefa</label>
         <input required type="text" formControlName="descricao" placeholder="Digite a tarefa"
@@ -13,7 +14,7 @@
         </app-mensagem>
         <label for="prioridade">Prioridade</label>
         <select required formControlName="prioridade" [ngClass]="campoValidado('prioridade')">
-            <option disabled value="">Selecione</option>
+            <option value="">Selecione</option>
             <option value="Alta">Alta</option>
             <option value="Normal">Normal</option>
             <option value="Baixa">Baixa</option>
@@ -22,7 +23,7 @@
         </app-mensagem>
         <label for="categoria">Categoria</label>
         <select required formControlName="categoria" [ngClass]="campoValidado('categoria')">
-            <option disabled value="">Selecione</option>
+            <option value="">Selecione</option>
             <option value="Casa">Casa</option>
             <option value="Trabalho">Trabalho</option>
             <option value="Estudos">Estudos</option>
@@ -56,7 +57,7 @@
          (keyup)="filtrarTarefasPorDescricao(campoBusca)"
          >
     </div>
-    <div *ngIf="listaTarefasFiltradas.length > 0, else semTarefas">
+    <div @listStage *ngIf="listaTarefasFiltradas.length > 0, else semTarefas">
         <div @filterAnimation class="lista-tarefas card-{{ tarefa.categoria }}" *ngFor="let tarefa of listaTarefasFiltradas; let i = index"
             (mouseover)="indexTarefa =i" [@highlightedState]=" indexTarefa != i ? 'default' : 'highlighted' ">
             <div class="info-card">
@@ -69,8 +70,8 @@
                 </p>
                 <p class="status-tarefa">
                     <button [ngClass]="(tarefa.statusFinalizado == true) ? 'icone-checked' : 'icone-unchecked'"
-                        (click)="finalizarTarefa(tarefa.id);"
-                        [@checkButton]="(tarefa.id === id ? 'checked' : 'unchecked')">
+                        (click)="finalizarTarefa(tarefa);"
+                        [@checkButton]="tarefa.id === id && estadoBotao">
                     </button>
                 </p>
             </div>
@@ -83,7 +84,7 @@
                     <button class="botao-editar" (click)="carregarParaEditar(tarefa.id)">
                         <img src="assets/icones/icone-editar.png" alt="Ícone de editar">
                     </button>
-                    <button (click)="excluirTarefa(tarefa.id)" class="botao-deletar">
+                    <button (click)="excluirTarefa(tarefa)" class="botao-deletar">
                         <img src="assets/icones/icone-excluir.png" alt="Ícone de excluir">
                     </button>
                 </div>
