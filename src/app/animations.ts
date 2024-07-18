@@ -1,4 +1,5 @@
-import { animate, group, keyframes, query, state, style, transition, trigger } from '@angular/animations';
+import { animate, group, keyframes, query, stagger, state, style, transition, trigger } from '@angular/animations';
+import { Optional } from '@angular/core';
 
 export const highlightedTrigger = trigger('highlightedState', [
     state('default', style({
@@ -43,7 +44,7 @@ export const checkButtonTrigger = trigger('checkButton', [
 export const filterTrigger = trigger('filterAnimation', [
     transition(':enter', [
         style({ opacity: 0, width: 0 }),
-        animate('900ms cubic-bezier(1,.12,.73,.92)', keyframes([
+        animate('200ms cubic-bezier(1,.12,.73,.92)', keyframes([
             style({ offset: 0, opacity: 0, width: 0 }),
             style({ offset: 0.8, opacity: 0.5, width: '*' }),
             style({ offset: 1, opacity: 1, width: '*' })
@@ -115,5 +116,48 @@ export const flyInOutTrigger = trigger('flyInOut', [
                 opacity: 0
             }))
         ])
+    ])
+]);
+
+export const shakeTrigger = trigger('shakeAnimation', [
+    transition('* => *', [
+        query('input.ng-invalid:focus, select.ng-invalid:focus', [
+            animate('0.5s', keyframes([
+                style({ border: '2px solid red' }),
+                style({ transform: 'translateX(0)' }),
+                style({ transform: 'translateX(-10px)' }),
+                style({ transform: 'translateX(10px)' }),
+                style({ transform: 'translateX(-10px)' }),
+                style({ transform: 'translateX(10px)' }),
+                style({ transform: 'translateX(-10px)' }),
+                style({ transform: 'translateX(10px)' }),
+                style({ transform: 'translateX(0)' })
+            ]))
+        ], { optional: true })
+    ])
+]);
+
+export const listStageTrigger = trigger('listStage', [
+    transition('* => *', [
+        query(':enter', [
+            style({
+                opcacity: 0,
+                transform: 'translateX(-100%)'
+            }),
+            stagger(120, [
+                animate('500ms ease-out', keyframes([
+                    style({
+                        opcacity: 1,
+                        transform: 'translateX(15%)',
+                        offset: 0.4
+                    }),
+                    style({
+                        opcacity: 1,
+                        transform: 'translateX(0)',
+                        offset: 1
+                    })
+                ]))
+            ])
+        ], { optional: true })
     ])
 ]);
